@@ -6,6 +6,19 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div class="modal-overlay"></div>
+    <div class="modal" id="formModal">
+        <h2>Create Project</h2>
+        <form id="modalForm">
+          <label for="title">Title:</label><br>
+          <input type="text" id="title" name="title" required><br><br>
+
+          <button type="submit">Submit</button>
+          <button type="button" id="closeModal">Close</button>
+        </form>
+    </div>
+    <div id="content">
+        <button id="openModal">Create Project</button>
+    </div>
 </body>
 </html>
