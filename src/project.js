@@ -28,6 +28,20 @@ export class ProjectManager {
     listProjects() {
       return this.projects;
     }
+    listProjectsDom(content){
+      while (content.firstChild) {
+        content.removeChild(content.firstChild);
+      }      
+      this.projects.forEach(project => {
+        const button = document.createElement('button');
+        button.textContent = project.title;
+        button.classList.add('project-button');
+        button.addEventListener('click', () => {
+          console.log(`Project clicked: ${project.title}`);
+        });
+        content.append(button);
+      });
+    }
 }
 
 

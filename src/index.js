@@ -5,4 +5,4 @@ import './modal.js'
 
 export const projects = new ProjectManager()
 projects.addProject(defaultProject);
-console.log(projects.listProjects());
+projects.listProjectsDom(document.querySelector("#projects-menu"));

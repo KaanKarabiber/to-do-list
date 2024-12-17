@@ -12,6 +12,7 @@ projectForm.addEventListener('keydown', (event) => {
         const inputValue = document.querySelector('#project-title').value; 
         const project = new Project(inputValue);
         projects.addProject(project);
+        projects.listProjectsDom(document.querySelector("#projects-menu"));
         document.querySelector('#project-title').value = "";
     }
 });
