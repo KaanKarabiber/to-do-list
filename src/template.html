@@ -7,18 +7,38 @@
 </head>
 <body>
     <div class="modal-overlay"></div>
-    <div class="modal" id="formModal">
-        <h2>Create Project</h2>
-        <form id="modalForm">
-          <label for="title">Title:</label><br>
-          <input type="text" id="title" name="title" required><br><br>
+    <div id="project-modal">
+        <form id="project-form">
+          <input type="text" id="project-title" name="project-title" required placeholder="Create Project">
+        </form>
+    </div>
 
-          <button type="submit">Submit</button>
-          <button type="button" id="closeModal">Close</button>
+    <div class="modal" id="task-modal">
+        <h2>Create Task</h2>
+        <form id="task-form">
+            <label for="title">Title:</label><br>
+            <input type="text" name="title" id="title" required><br>
+
+            <label for="description">Description:</label><br>
+            <input type="textarea" name="description" id="description"><br>
+
+            <label for="due-date">Date:</label><br>
+            <input type="date" name="due-date" id="due-date" required><br>
+
+            <label for="priority">Priority</label><br>
+            <input type="radio" name="priority" id="priority" required><br>
+            <input type="radio" name="priority" id="priority" required><br>
+            <input type="radio" name="priority" id="priority" required><br>
+
+            <label for="notes">Notes:</label><br>
+            <input type="text" name="notes" id="notes"><br>
+
+            <button type="submit">Submit</button>
+            <button type="button" id="close-modal">Close</button>
         </form>
     </div>
     <div id="content">
-        <button id="openModal">Create Project</button>
+        <button id="open-task-modal">Create Task</button>
     </div>
 </body>
 </html>
