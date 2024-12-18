@@ -12,8 +12,11 @@ projectForm.addEventListener('keydown', (event) => {
         const inputValue = document.querySelector('#project-title').value; 
         const project = new Project(inputValue);
         projects.addProject(project);
-        projects.listProjectsDom(document.querySelector("#projects-menu"));
+        projects.listProjectsSidebar(document.querySelector("#projects-menu"));
         document.querySelector('#project-title').value = "";
+        if(document.querySelector('#page-title').textContent === "Projects"){ // add project to content if the title right
+            projects.listProjectsContent(document.querySelector("#content"));
+        }
     }
 });
 

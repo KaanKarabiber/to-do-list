@@ -28,9 +28,9 @@ export class ProjectManager {
     listProjects() {
       return this.projects;
     }
-    listProjectsDom(content){
-      while (content.childNodes.length > 2) { // remove all elements except first 2 in sidebar
-        content.removeChild(content.childNodes[2]);
+    listProjectsSidebar(sidebar){
+      while (sidebar.childNodes.length > 2) { // remove all elements except first 2 in sidebar
+        sidebar.removeChild(sidebar.childNodes[2]);
       }  
       const projectList = document.createElement("ul"); 
       this.projects.forEach(project => {
@@ -43,9 +43,25 @@ export class ProjectManager {
         });
         projectElement.append(button);
         projectList.append(projectElement)
-        content.append(projectList);
+        sidebar.append(projectList);
       });
     }
+    listProjectsContent(content){
+      while (content.firstChild) {
+        content.removeChild(content.firstChild);
+      }  
+      this.projects.forEach(project =>{
+        const projectDiv = document.createElement('div');
+        const projectTitle = document.createElement('p');
+        const expandButton = document.createElement('button');
+        expandButton.textContent = "expand";
+        projectTitle.textContent = project.title;
+        projectDiv.append(projectTitle, expandButton);
+        content.append(projectDiv);
+        console.log("yep")
+      });
+    }
+    
 }
 
 
