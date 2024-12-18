@@ -29,17 +29,21 @@ export class ProjectManager {
       return this.projects;
     }
     listProjectsDom(content){
-      while (content.firstChild) {
-        content.removeChild(content.firstChild);
-      }      
+      while (content.childNodes.length > 2) { // remove all elements except first 2 in sidebar
+        content.removeChild(content.childNodes[2]);
+      }  
+      const projectList = document.createElement("ul"); 
       this.projects.forEach(project => {
         const button = document.createElement('button');
+        const projectElement = document.createElement('li');
         button.textContent = project.title;
         button.classList.add('project-button');
         button.addEventListener('click', () => {
           console.log(`Project clicked: ${project.title}`);
         });
-        content.append(button);
+        projectElement.append(button);
+        projectList.append(projectElement)
+        content.append(projectList);
       });
     }
 }
