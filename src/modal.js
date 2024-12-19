@@ -1,5 +1,6 @@
 import { projects } from "./index.js";
 import { Project } from "./project.js";
+import { Task } from "./toDo.js";
 
 // project modal
 
@@ -14,7 +15,7 @@ projectForm.addEventListener('keydown', (event) => {
         projects.addProject(project);
         projects.listProjectsSidebar(document.querySelector("#projects-menu"));
         document.querySelector('#project-title').value = "";
-        if(document.querySelector('#page-title').textContent === "Projects"){ // add project to content if the title right
+        if(document.querySelector('#page-title').textContent === "Projects"){ // update content if the title is Projects
             projects.listProjectsContent(document.querySelector("#content"));
         }
     }
@@ -30,22 +31,55 @@ projectTitleInput.addEventListener('blur', () => {
 
 // task modal
 
-const openModalBtn = document.querySelector('#open-task-modal');
 const closeModalBtn = document.querySelector('#close-modal');
 const overlay = document.querySelector('.modal-overlay');
 const modal = document.querySelector('.modal');
+const taskForm = document.querySelector('#task-form'); 
+let activeProjectTitle = null;
 
-function openTaskModal() {
+export function openTaskModal(projectTitle) {
+    activeProjectTitle = projectTitle;
     modal.classList.add('active');
     overlay.classList.add('active');
 }
 
-function closeTaskModal() {
+export function closeTaskModal() {
     modal.classList.remove('active');
     overlay.classList.remove('active');
 }
 
-openModalBtn.addEventListener('click', () => openTaskModal());
 closeModalBtn.addEventListener('click', () => closeTaskModal());
 overlay.addEventListener('click', () => closeTaskModal());
+
+taskForm.addEventListener('submit', (event) => {
+    event.preventDefault(); 
+
+    const taskTitle = document.querySelector('#title').value;
+    const taskDescription = document.querySelector('#description').value;
+    const taskDueDate = document.querySelector('#due-date').value;
+    const taskPriority = document.querySelector('input[name="priority"]:checked').value; 
+    const taskNotes = document.querySelector('#notes').value;
+
+    console.log({
+        taskTitle,
+        taskDescription,
+        taskDueDate,
+        taskPriority,
+        taskNotes,
+    });
+    const newTask = new Task(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, false);
+    const project = projects.findProject(activeProjectTitle);
+    if(project){
+        project.tasks.push(newTask);
+        if(document.querySelector("#page-title").textContent === "Projects"){
+            projects.listProjectsContent(document.querySelector("#content"));
+          }
+    }
+    else{
+        console.error("project not found");
+    }
+
+    closeTaskModal();
+    taskForm.reset();
+});
 

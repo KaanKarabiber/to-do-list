@@ -29,20 +29,20 @@
             <input type="date" name="due-date" id="due-date" required><br>
 
             <label for="priority">Priority</label><br>
-            <input type="radio" name="priority" id="priority" required><br>
-            <input type="radio" name="priority" id="priority" required><br>
-            <input type="radio" name="priority" id="priority" required><br>
+            <input type="radio" name="priority" id="priority-low" value="low" required><br>
+            <input type="radio" name="priority" id="priority-medium" value="medium" required><br>
+            <input type="radio" name="priority" id="priority-high" value="high" required><br>
 
             <label for="notes">Notes:</label><br>
             <input type="text" name="notes" id="notes"><br>
 
-            <button type="submit">Submit</button>
+            <button type="submit" id="submit-task-modal">Submit</button>
             <button type="button" id="close-modal">Close</button>
         </form>
     </div>
     <h1 id="page-title">Projects</h1>
     <div id="content">
-        <button id="open-task-modal">Create Task</button>
+        
     </div>
 </body>
 </html>
