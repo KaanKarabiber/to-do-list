@@ -54,11 +54,22 @@ export class ProjectManager {
         const projectDiv = document.createElement('div');
         const projectTitle = document.createElement('p');
         const expandButton = document.createElement('button');
+        
+        const deleteProjectBtn = document.createElement('button');
+        deleteProjectBtn.textContent = "delete";
+        deleteProjectBtn.addEventListener('click', () => {
+          this.removeProject(project.title);
+          this.listProjectsSidebar(document.querySelector("#projects-menu"));
+          if(document.querySelector("#page-title").textContent === "Projects"){
+            this.listProjectsContent(content); 
+          }
+        });
+
         expandButton.textContent = "expand";
         projectTitle.textContent = project.title;
-        projectDiv.append(projectTitle, expandButton);
+        projectDiv.append(projectTitle, expandButton, deleteProjectBtn);
         content.append(projectDiv);
-        console.log("yep")
+        
       });
     }
     
