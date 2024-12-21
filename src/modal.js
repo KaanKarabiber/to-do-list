@@ -35,10 +35,10 @@ const closeModalBtn = document.querySelector('#close-modal');
 const overlay = document.querySelector('.modal-overlay');
 const modal = document.querySelector('.modal');
 const taskForm = document.querySelector('#task-form'); 
-let activeProjectTitle = null;
+let activeProject = null;
 
-export function openTaskModal(projectTitle) {
-    activeProjectTitle = projectTitle;
+export function openTaskModal(project) {
+    activeProject = project;
     modal.classList.add('active');
     overlay.classList.add('active');
 }
@@ -60,15 +60,8 @@ taskForm.addEventListener('submit', (event) => {
     const taskPriority = document.querySelector('input[name="priority"]:checked').value; 
     const taskNotes = document.querySelector('#notes').value;
 
-    console.log({
-        taskTitle,
-        taskDescription,
-        taskDueDate,
-        taskPriority,
-        taskNotes,
-    });
     const newTask = new Task(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, false);
-    const project = projects.findProject(activeProjectTitle);
+    const project = projects.findProject(activeProject);
     if(project){
         project.tasks.push(newTask);
         if(document.querySelector("#page-title").textContent === "Projects"){

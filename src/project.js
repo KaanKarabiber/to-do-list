@@ -18,8 +18,8 @@ export class ProjectManager {
       this.projects.push(project);
     }
   
-    findProject(title) {
-      return this.projects.find(project => project.title === title);
+    findProject(project) {
+      return this.projects.find(p => p === project);
     }
   
     removeProject(project) {
@@ -103,7 +103,7 @@ export class ProjectManager {
         
         const addTaskButton = document.createElement('button');
         addTaskButton.textContent = "add";
-        addTaskButton.addEventListener('click', () => openTaskModal(project.title))
+        addTaskButton.addEventListener('click', () => openTaskModal(project))
         
         projectTitle.textContent = project.title;
         projectDiv.append(projectTitle, expandButton, deleteButton, addTaskButton, projectDetails);
