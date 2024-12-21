@@ -9,6 +9,9 @@ export class Project{
     getTasks(){
       return this.tasks.length;
     }
+    removeTask(task){
+      this.tasks = this.tasks.filter(t => t !== task);
+    }
 }
 export const defaultProject = new Project("default project", [defaultTask]);
 
@@ -50,7 +53,7 @@ export class ProjectManager {
         sidebar.append(projectList);
       });
     }
-    contentExtendBtn(projectDetails){
+    contentExpandBtn(projectDetails){
       const expandButton = document.createElement('button');
       
       expandButton.addEventListener('click', () => {
@@ -102,7 +105,7 @@ export class ProjectManager {
         const projectTitle = document.createElement('p');
         const taskCount = document.createElement('p');
         const projectDetails = this.contentProjectDetails(project);
-        const expandButton = this.contentExtendBtn(projectDetails);
+        const expandButton = this.contentExpandBtn(projectDetails);
         const deleteButton = this.contentDeleteBtn(project);
         
         const addTaskButton = document.createElement('button');
@@ -112,6 +115,28 @@ export class ProjectManager {
         projectTitle.textContent = project.title;
         taskCount.textContent = project.getTasks() + " tasks"
         projectDiv.append(projectTitle, taskCount, expandButton, deleteButton, addTaskButton, projectDetails);
+
+        for (let index = 0; index < project.getTasks(); index++) {
+          const taskDiv = document.createElement('div');
+          const taskTitle = document.createElement('p');
+          taskTitle.textContent = project.tasks[index].title;
+
+          const taskDueDate = document.createElement('p');
+          taskDueDate.textContent = project.tasks[index].dueDate;
+
+          const taskExpandButton = document.createElement('button');
+          taskExpandButton.textContent = "expand task";
+          
+          const deleteTaskButton = document.createElement('button');
+          deleteTaskButton.textContent = "delete task";
+          deleteTaskButton.addEventListener('click', () => {
+            project.removeTask(project.tasks[index]);
+            this.listProjectsContent(content);
+          });
+          
+          taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton);  
+          projectDiv.append(taskDiv)
+        }
         content.append(projectDiv);
         
       });
