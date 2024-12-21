@@ -22,9 +22,9 @@ export class ProjectManager {
       return this.projects.find(project => project.title === title);
     }
   
-    removeProject(title) {
-      this.projects = this.projects.filter(project => project.title !== title);
-    }
+    removeProject(project) {
+      this.projects = this.projects.filter(p => p !== project);
+    }    
 
     listProjects() {
       return this.projects;
@@ -63,11 +63,11 @@ export class ProjectManager {
       expandButton.textContent = "expand";
       return expandButton
     }
-    contentDeleteBtn(projectTitle){
+    contentDeleteBtn(project){
       const deleteProjectBtn = document.createElement('button');
       deleteProjectBtn.textContent = "delete";
       deleteProjectBtn.addEventListener('click', () => {
-        this.removeProject(projectTitle); 
+        this.removeProject(project); 
         this.listProjectsSidebar(document.querySelector("#projects-menu"));
         if(document.querySelector("#page-title").textContent === "Projects"){
           this.listProjectsContent(content); 
@@ -78,17 +78,15 @@ export class ProjectManager {
     contentProjectDetails(project){
       const projectDetails = document.createElement('div');
       projectDetails.style.display = 'none';
-      const updateDetails = () => {
-        projectDetails.textContent = project.tasks.map(task =>
-            `Title: ${task.title}, ` +
-            `Description: ${task.description}, ` +
-            `Due Date: ${task.dueDate}, ` +
-            `Priority: ${task.priority}, ` +
-            `Notes: ${task.notes}, ` +
-            `Completed: ${task.check ? "Yes" : "No"}`
-        ).join('\n') || "No tasks";
-      };
-      updateDetails();
+      projectDetails.textContent = project.tasks.map(task =>
+        `Title: ${task.title}, ` +
+         `Description: ${task.description}, ` +
+         `Due Date: ${task.dueDate}, ` +
+         `Priority: ${task.priority}, ` +
+         `Notes: ${task.notes}, ` +
+         `Completed: ${task.check ? "Yes" : "No"}`
+      ).join('\n') || "No tasks";
+
       projectDetails.classList.add('project-details');
       return projectDetails
     }
@@ -101,7 +99,7 @@ export class ProjectManager {
         const projectTitle = document.createElement('p');
         const projectDetails = this.contentProjectDetails(project);
         const expandButton = this.contentExtendBtn(projectDetails);
-        const deleteButton = this.contentDeleteBtn(project.title);
+        const deleteButton = this.contentDeleteBtn(project);
         
         const addTaskButton = document.createElement('button');
         addTaskButton.textContent = "add";
