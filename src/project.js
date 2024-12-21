@@ -6,6 +6,9 @@ export class Project{
         this.title = title;
         this.tasks = tasks;
     }
+    getTasks(){
+      return this.tasks.length;
+    }
 }
 export const defaultProject = new Project("default project", [defaultTask]);
 
@@ -97,6 +100,7 @@ export class ProjectManager {
       this.projects.forEach(project =>{
         const projectDiv = document.createElement('div');
         const projectTitle = document.createElement('p');
+        const taskCount = document.createElement('p');
         const projectDetails = this.contentProjectDetails(project);
         const expandButton = this.contentExtendBtn(projectDetails);
         const deleteButton = this.contentDeleteBtn(project);
@@ -106,7 +110,8 @@ export class ProjectManager {
         addTaskButton.addEventListener('click', () => openTaskModal(project))
         
         projectTitle.textContent = project.title;
-        projectDiv.append(projectTitle, expandButton, deleteButton, addTaskButton, projectDetails);
+        taskCount.textContent = project.getTasks() + " tasks"
+        projectDiv.append(projectTitle, taskCount, expandButton, deleteButton, addTaskButton, projectDetails);
         content.append(projectDiv);
         
       });
