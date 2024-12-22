@@ -53,22 +53,6 @@ export class ProjectManager {
         sidebar.append(projectList);
       });
     }
-    contentExpandBtn(projectDetails){
-      const expandButton = document.createElement('button');
-      
-      expandButton.addEventListener('click', () => {
-        if (projectDetails.style.display === 'none') {
-          projectDetails.style.display = 'block';
-          expandButton.textContent = "collapse";
-        } 
-        else {
-          projectDetails.style.display = 'none';
-          expandButton.textContent = "expand";
-        }
-      });
-      expandButton.textContent = "expand";
-      return expandButton
-    }
     contentDeleteBtn(project){
       const deleteProjectBtn = document.createElement('button');
       deleteProjectBtn.textContent = "delete";
@@ -81,21 +65,6 @@ export class ProjectManager {
       });
       return deleteProjectBtn 
     }
-    contentProjectDetails(project){
-      const projectDetails = document.createElement('div');
-      projectDetails.style.display = 'none';
-      projectDetails.textContent = project.tasks.map(task =>
-        `Title: ${task.title}, ` +
-         `Description: ${task.description}, ` +
-         `Due Date: ${task.dueDate}, ` +
-         `Priority: ${task.priority}, ` +
-         `Notes: ${task.notes}, ` +
-         `Completed: ${task.check ? "Yes" : "No"}`
-      ).join('\n') || "No tasks";
-
-      projectDetails.classList.add('project-details');
-      return projectDetails
-    }
     listProjectsContent(content){
       while (content.firstChild) {
         content.removeChild(content.firstChild);
@@ -104,8 +73,7 @@ export class ProjectManager {
         const projectDiv = document.createElement('div');
         const projectTitle = document.createElement('p');
         const taskCount = document.createElement('p');
-        const projectDetails = this.contentProjectDetails(project);
-        const expandButton = this.contentExpandBtn(projectDetails);
+
         const deleteButton = this.contentDeleteBtn(project);
         
         const addTaskButton = document.createElement('button');
@@ -114,7 +82,7 @@ export class ProjectManager {
         
         projectTitle.textContent = project.title;
         taskCount.textContent = project.getTasks() + " tasks"
-        projectDiv.append(projectTitle, taskCount, expandButton, deleteButton, addTaskButton, projectDetails);
+        projectDiv.append(projectTitle, taskCount, deleteButton, addTaskButton);
         
         project.tasks.forEach(task => {
           const taskDiv = document.createElement('div');
@@ -126,9 +94,30 @@ export class ProjectManager {
 
           const taskExpandButton = document.createElement('button');
           taskExpandButton.textContent = "expand task";
-          taskExpandButton.addEventListener('click', () =>{
-            const mambo = this.contentProjectDetails(project);
-          })
+          
+          const taskDetails = document.createElement('div');
+          taskDetails.style.display = 'none';
+          taskDetails.textContent = 
+            `Title: ${task.title}, ` +
+             `Description: ${task.description}, ` +
+             `Due Date: ${task.dueDate}, ` +
+             `Priority: ${task.priority}, ` +
+             `Notes: ${task.notes}, ` +
+             `Completed: ${task.check ? "Yes" : "No"}`;
+        
+          taskDetails.classList.add('task-details');
+          
+          taskExpandButton.addEventListener('click', () => {
+            if (taskDetails.style.display === 'none') {
+              taskDetails.style.display = 'block';
+              taskExpandButton.textContent = "collapse";
+            } 
+            else {
+              taskDetails.style.display = 'none';
+              taskExpandButton.textContent = "expand";
+            }
+          });
+          taskExpandButton.textContent = "expand";
 
           const deleteTaskButton = document.createElement('button');
           deleteTaskButton.textContent = "delete task";
@@ -137,7 +126,7 @@ export class ProjectManager {
             this.listProjectsContent(content);
           });
           
-          taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton);  
+          taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton, taskDetails);  
           projectDiv.append(taskDiv);
         });
         content.append(projectDiv);
