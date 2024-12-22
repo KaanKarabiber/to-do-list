@@ -115,28 +115,31 @@ export class ProjectManager {
         projectTitle.textContent = project.title;
         taskCount.textContent = project.getTasks() + " tasks"
         projectDiv.append(projectTitle, taskCount, expandButton, deleteButton, addTaskButton, projectDetails);
-
-        for (let index = 0; index < project.getTasks(); index++) {
+        
+        project.tasks.forEach(task => {
           const taskDiv = document.createElement('div');
           const taskTitle = document.createElement('p');
-          taskTitle.textContent = project.tasks[index].title;
+          taskTitle.textContent = task.title;
 
           const taskDueDate = document.createElement('p');
-          taskDueDate.textContent = project.tasks[index].dueDate;
+          taskDueDate.textContent = task.dueDate;
 
           const taskExpandButton = document.createElement('button');
           taskExpandButton.textContent = "expand task";
-          
+          taskExpandButton.addEventListener('click', () =>{
+            const mambo = this.contentProjectDetails(project);
+          })
+
           const deleteTaskButton = document.createElement('button');
           deleteTaskButton.textContent = "delete task";
           deleteTaskButton.addEventListener('click', () => {
-            project.removeTask(project.tasks[index]);
+            project.removeTask(task);
             this.listProjectsContent(content);
           });
           
           taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton);  
-          projectDiv.append(taskDiv)
-        }
+          projectDiv.append(taskDiv);
+        });
         content.append(projectDiv);
         
       });
