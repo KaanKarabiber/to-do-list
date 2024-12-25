@@ -9,6 +9,6 @@ export class Task{
         this.check = check;
     }
 }
-const dueDate = new Date(2022, 9, 9);
+const dueDate = new Date(2022, 8, 9);
 const formattedDate = format(dueDate, 'MMMM do yyyy');
-export const defaultTask = new Task("mambo", "mambocino", formattedDate, "High", "mambo time", true);
+export const defaultTask = new Task("mambo", "mambocino", formattedDate, "high", "mambo time", true);

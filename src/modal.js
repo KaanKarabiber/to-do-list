@@ -1,7 +1,7 @@
 import { projects } from "./index.js";
 import { Project } from "./project.js";
 import { Task } from "./toDo.js";
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, parse } from 'date-fns';
 
 // project modal
 
@@ -36,11 +36,53 @@ const overlay = document.querySelector('.modal-overlay');
 const modal = document.querySelector('.modal');
 const taskForm = document.querySelector('#task-form'); 
 let activeProject = null;
+let editingTask = null;
 
-export function openTaskModal(project) {
+export function openTaskModal(project, task = null) {
     activeProject = project;
-    modal.classList.add('active');
-    overlay.classList.add('active');
+    editingTask = task; 
+    modal.classList.add("active");
+    overlay.classList.add("active");
+
+    if (editingTask) {
+        document.querySelector("#title").value = task.title || "";
+        document.querySelector("#description").value = task.description || "";
+
+        const dueDateInput = document.querySelector("#due-date");
+        if (typeof task.dueDate === "string" && task.dueDate.trim()) {
+            try {
+                const parsedDate = parse(task.dueDate, "MMMM do yyyy", new Date());
+                if (!isNaN(parsedDate)) { 
+                    const localDate = new Date(parsedDate);
+                    localDate.setHours(0, 0, 0, 0);
+                    dueDateInput.value = localDate.toLocaleDateString("en-CA"); // "en-CA" gives YYYY-MM-DD format
+                } 
+                else {
+                    dueDateInput.value = ""; 
+                }
+            } catch (error) {
+                console.error("Failed to parse date:", error);
+                dueDateInput.value = ""; 
+            }
+        } 
+        else {
+            console.error("Invalid or empty date string:", task.dueDate);
+            dueDateInput.value = ""; 
+        }
+        if (task.priority) {
+            const priorityElement = document.querySelector(`#priority-${task.priority.toLowerCase()}`);
+            if (priorityElement) {
+                priorityElement.checked = true;
+            } 
+            else {
+                console.error("Invalid priority value:", task.priority);
+            }
+        }
+        document.querySelector("#notes").value = task.notes || "";
+    } 
+    else {
+        taskForm.reset(); 
+    }
 }
 
 export function closeTaskModal() {
@@ -51,28 +93,38 @@ export function closeTaskModal() {
 closeModalBtn.addEventListener('click', () => closeTaskModal());
 overlay.addEventListener('click', () => closeTaskModal());
 
-taskForm.addEventListener('submit', (event) => {
-    event.preventDefault(); 
+taskForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-    const taskTitle = document.querySelector('#title').value;
-    const taskDescription = document.querySelector('#description').value;
-    const taskDueDate = document.querySelector('#due-date').value;
-    const taskPriority = document.querySelector('input[name="priority"]:checked').value; 
-    const taskNotes = document.querySelector('#notes').value;
+    const taskTitle = document.querySelector("#title").value;
+    const taskDescription = document.querySelector("#description").value;
+    const taskDueDate = document.querySelector("#due-date").value;
+    const taskPriority = document.querySelector("input[name='priority']:checked").value;
+    const taskNotes = document.querySelector("#notes").value;
 
-    const formattedDueDate = format(parseISO(taskDueDate), 'MMMM do yyyy');
+    const formattedDueDate = format(parseISO(taskDueDate), "MMMM do yyyy");
 
-    const newTask = new Task(taskTitle, taskDescription, formattedDueDate, taskPriority, taskNotes, false);
     const project = projects.findProject(activeProject);
-    if(project){
-        project.tasks.push(newTask);
-            projects.listProjectsContent(document.querySelector("#content"));
-    }
-    else{
-        console.error("project not found");
+    if (!project) {
+        console.error("Project not found");
+        return;
     }
 
+    if (editingTask) {
+        // Update existing task
+        editingTask.title = taskTitle;
+        editingTask.description = taskDescription;
+        editingTask.dueDate = formattedDueDate;
+        editingTask.priority = taskPriority;
+        editingTask.notes = taskNotes;
+    } 
+    else {
+        // Create a new task
+        const newTask = new Task(taskTitle, taskDescription, formattedDueDate, taskPriority, taskNotes, false);
+        project.tasks.push(newTask);
+    }
+
+    projects.listProjectsContent(document.querySelector("#content"));
     closeTaskModal();
-    taskForm.reset();
 });
 

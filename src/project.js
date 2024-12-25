@@ -1,6 +1,6 @@
 import { defaultTask } from "./toDo";
 import { openTaskModal } from "./modal";
-import { format } from "date-fns";
+import { parse, format } from "date-fns";
 
 export class Project{
     constructor (title, tasks = []){
@@ -97,8 +97,6 @@ export class ProjectManager {
           taskExpandButton.textContent = "expand task";
           
           const taskDetails = document.createElement('div');
-          const editTask = document.createElement('button');
-          editTask.textContent = "edit task";
           taskDetails.style.display = 'none';
 
           taskDetails.textContent = 
@@ -110,7 +108,12 @@ export class ProjectManager {
             `Completed: ${task.check ? "Yes" : "No"}`;
         
           taskDetails.classList.add('task-details');
-          
+          const editTask = document.createElement('button');
+          editTask.textContent = "edit task";
+          editTask.addEventListener("click", () => {
+            openTaskModal(project, task); 
+          });
+    
           taskExpandButton.addEventListener('click', () => {
             if (taskDetails.style.display === 'none') {
               taskDetails.style.display = 'block';
