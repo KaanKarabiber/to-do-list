@@ -1,5 +1,6 @@
 import { defaultTask } from "./toDo";
 import { openTaskModal } from "./modal";
+import { format } from "date-fns";
 
 export class Project{
     constructor (title, tasks = []){
@@ -96,14 +97,17 @@ export class ProjectManager {
           taskExpandButton.textContent = "expand task";
           
           const taskDetails = document.createElement('div');
+          const editTask = document.createElement('button');
+          editTask.textContent = "edit task";
           taskDetails.style.display = 'none';
+
           taskDetails.textContent = 
             `Title: ${task.title}, ` +
-             `Description: ${task.description}, ` +
-             `Due Date: ${task.dueDate}, ` +
-             `Priority: ${task.priority}, ` +
-             `Notes: ${task.notes}, ` +
-             `Completed: ${task.check ? "Yes" : "No"}`;
+            `Description: ${task.description}, ` +
+            `Due Date: ${task.dueDate}, ` +
+            `Priority: ${task.priority}, ` +
+            `Notes: ${task.notes}, ` +
+            `Completed: ${task.check ? "Yes" : "No"}`;
         
           taskDetails.classList.add('task-details');
           
@@ -125,7 +129,7 @@ export class ProjectManager {
             project.removeTask(task);
             this.listProjectsContent(content);
           });
-          
+          taskDetails.append(editTask);
           taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton, taskDetails);  
           projectDiv.append(taskDiv);
         });

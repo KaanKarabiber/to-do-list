@@ -1,6 +1,7 @@
 import { projects } from "./index.js";
 import { Project } from "./project.js";
 import { Task } from "./toDo.js";
+import { format, parseISO } from 'date-fns';
 
 // project modal
 
@@ -15,9 +16,8 @@ projectForm.addEventListener('keydown', (event) => {
         projects.addProject(project);
         projects.listProjectsSidebar(document.querySelector("#projects-menu"));
         document.querySelector('#project-title').value = "";
-        if(document.querySelector('#page-title').textContent === "Projects"){ // update content if the title is Projects
-            projects.listProjectsContent(document.querySelector("#content"));
-        }
+        projects.listProjectsContent(document.querySelector("#content"));
+
     }
 });
 
@@ -60,13 +60,13 @@ taskForm.addEventListener('submit', (event) => {
     const taskPriority = document.querySelector('input[name="priority"]:checked').value; 
     const taskNotes = document.querySelector('#notes').value;
 
-    const newTask = new Task(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, false);
+    const formattedDueDate = format(parseISO(taskDueDate), 'MMMM do yyyy');
+
+    const newTask = new Task(taskTitle, taskDescription, formattedDueDate, taskPriority, taskNotes, false);
     const project = projects.findProject(activeProject);
     if(project){
         project.tasks.push(newTask);
-        if(document.querySelector("#page-title").textContent === "Projects"){
             projects.listProjectsContent(document.querySelector("#content"));
-          }
     }
     else{
         console.error("project not found");
