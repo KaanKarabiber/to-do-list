@@ -4,7 +4,10 @@ import './modal.js'
 
 const content = document.querySelector("#content");
 export const projects = new ProjectManager()
-projects.addProject(defaultProject);
+if (projects.listProjects().length === 0) {
+    projects.addProject(defaultProject);
+}
+
 projects.listProjectsSidebar(document.querySelector("#projects-menu"));
 projects.listProjectsContent(content);
 

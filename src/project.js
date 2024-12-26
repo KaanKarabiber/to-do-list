@@ -1,5 +1,6 @@
 import { defaultTask } from "./toDo";
 import { openTaskModal } from "./modal";
+import { Task } from "./toDo";
 import { parse, format } from "date-fns";
 
 export class Project{
@@ -18,11 +19,12 @@ export const defaultProject = new Project("default project", [defaultTask]);
 
 export class ProjectManager {
     constructor() {
-      this.projects = [];
+      this.projects = this.loadProjectsFromStorage() || [];
     }
   
     addProject(project) {
       this.projects.push(project);
+      this.saveProjectsToStorage();
     }
   
     findProject(project) {
@@ -31,10 +33,36 @@ export class ProjectManager {
   
     removeProject(project) {
       this.projects = this.projects.filter(p => p !== project);
+      this.saveProjectsToStorage();
     }    
 
     listProjects() {
       return this.projects;
+    }
+    saveProjectsToStorage() {
+      const projectsJSON = this.projects.map(project => ({
+          title: project.title,
+          tasks: project.tasks.map(task => ({
+              title: task.title,
+              description: task.description,
+              dueDate: task.dueDate,
+              priority: task.priority,
+              notes: task.notes,
+              check: task.check
+          }))
+      }));
+      localStorage.setItem("projects", JSON.stringify(projectsJSON));
+    }
+    loadProjectsFromStorage() {
+      const projectsJSON = localStorage.getItem("projects");
+      if (!projectsJSON) return null;
+
+      return JSON.parse(projectsJSON).map(projectData => {
+          const project = new Project(projectData.title);
+          project.tasks = projectData.tasks.map(task => new Task(task.title, task.description, task.dueDate, task.priority, task.notes, task.check)
+          );
+          return project;
+      });
     }
     listProjectsSidebar(sidebar){
       while (sidebar.childNodes.length > 2) { // remove all elements except first 2 in sidebar

@@ -123,7 +123,7 @@ taskForm.addEventListener("submit", (event) => {
         const newTask = new Task(taskTitle, taskDescription, formattedDueDate, taskPriority, taskNotes, false);
         project.tasks.push(newTask);
     }
-
+    projects.saveProjectsToStorage();
     projects.listProjectsContent(document.querySelector("#content"));
     closeTaskModal();
 });
