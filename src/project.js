@@ -2,6 +2,10 @@ import { defaultTask } from "./toDo";
 import { openTaskModal } from "./modal";
 import { Task } from "./toDo";
 import { parse, format } from "date-fns";
+import deleteIcon from './assets/delete.svg';
+import expandDown from './assets/arrow-expand-down.svg';
+import expandUp from './assets/arrow-expand-up.svg';
+import addProjectIcon from './assets/add.svg';
 
 export class Project{
     constructor (title, tasks = []){
@@ -84,7 +88,9 @@ export class ProjectManager {
     }
     contentDeleteBtn(project){
       const deleteProjectBtn = document.createElement('button');
-      deleteProjectBtn.textContent = "delete";
+      const deleteProjectBtnSvg = document.createElement('img');
+      deleteProjectBtnSvg.src = deleteIcon;
+      deleteProjectBtn.append(deleteProjectBtnSvg);
       deleteProjectBtn.addEventListener('click', () => {
         this.removeProject(project); 
         this.listProjectsSidebar(document.querySelector("#projects-menu"));
@@ -106,11 +112,14 @@ export class ProjectManager {
         const deleteButton = this.contentDeleteBtn(project);
         
         const addTaskButton = document.createElement('button');
-        addTaskButton.textContent = "add";
+        const addTaskButtonImg = document.createElement('img');
+        addTaskButtonImg.src = addProjectIcon;
         addTaskButton.addEventListener('click', () => openTaskModal(project))
         
         projectTitle.textContent = project.title;
-        taskCount.textContent = project.getTasks() + " tasks"
+        taskCount.textContent = project.getTasks() + " tasks";
+
+        addTaskButton.append(addTaskButtonImg);
         projectDiv.append(projectTitle, taskCount, deleteButton, addTaskButton);
         
         project.tasks.forEach(task => {
@@ -122,7 +131,8 @@ export class ProjectManager {
           taskDueDate.textContent = task.dueDate;
 
           const taskExpandButton = document.createElement('button');
-          taskExpandButton.textContent = "expand task";
+          const taskExpandButtonSvg = document.createElement('img');
+          taskExpandButtonSvg.src = expandDown;
           
           const taskDetails = document.createElement('div');
           taskDetails.style.display = 'none';
@@ -145,21 +155,23 @@ export class ProjectManager {
           taskExpandButton.addEventListener('click', () => {
             if (taskDetails.style.display === 'none') {
               taskDetails.style.display = 'block';
-              taskExpandButton.textContent = "collapse";
+              taskExpandButtonSvg.src = expandUp; 
             } 
             else {
               taskDetails.style.display = 'none';
-              taskExpandButton.textContent = "expand";
+              taskExpandButtonSvg.src = expandDown;
             }
           });
-          taskExpandButton.textContent = "expand";
 
           const deleteTaskButton = document.createElement('button');
-          deleteTaskButton.textContent = "delete task";
+          const deleteTaskButtonSvg = document.createElement('img');
+          deleteTaskButtonSvg.src = deleteIcon;
           deleteTaskButton.addEventListener('click', () => {
             project.removeTask(task);
             this.listProjectsContent(content);
           });
+          taskExpandButton.append(taskExpandButtonSvg);
+          deleteTaskButton.append(deleteTaskButtonSvg);
           taskDetails.append(editTask);
           taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton, taskDetails);  
           projectDiv.append(taskDiv);
