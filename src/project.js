@@ -1,11 +1,12 @@
 import { defaultTask } from "./toDo";
 import { openTaskModal } from "./modal";
 import { Task } from "./toDo";
-import { parse, format } from "date-fns";
+import { parse, format, differenceInCalendarDays, parseISO } from "date-fns";
 import deleteIcon from './assets/delete.svg';
 import expandDown from './assets/arrow-expand-down.svg';
 import expandUp from './assets/arrow-expand-up.svg';
 import addProjectIcon from './assets/add.svg';
+import dueDateIcon from './assets/dueDate.svg';
 
 export class Project{
     constructor (title, tasks = []){
@@ -106,37 +107,82 @@ export class ProjectManager {
       }  
       this.projects.forEach(project =>{
         const projectDiv = document.createElement('div');
-        const projectTitle = document.createElement('p');
-        const taskCount = document.createElement('p');
+        projectDiv.classList.add('project-container');
 
-        const deleteButton = this.contentDeleteBtn(project);
-        
+        const projectTitle = document.createElement('h2');
+        projectTitle.textContent = project.title;
+
+        const taskCount = document.createElement('p');
+        taskCount.textContent = project.getTasks() + " task(s)";
+
+        const deleteButton = this.contentDeleteBtn(project);   
+
         const addTaskButton = document.createElement('button');
         const addTaskButtonImg = document.createElement('img');
         addTaskButtonImg.src = addProjectIcon;
-        addTaskButton.addEventListener('click', () => openTaskModal(project))
+        addTaskButton.addEventListener('click', () => openTaskModal(project));
+
+        const projectActionDiv = document.createElement('div');
+        projectActionDiv.classList.add('project-actions');
         
-        projectTitle.textContent = project.title;
-        taskCount.textContent = project.getTasks() + " tasks";
+        const projectElementsDiv = document.createElement('div');
+        projectElementsDiv.classList.add('project-elements-div');
 
         addTaskButton.append(addTaskButtonImg);
-        projectDiv.append(projectTitle, taskCount, deleteButton, addTaskButton);
+        projectActionDiv.append(taskCount, addTaskButton, deleteButton);
+        projectElementsDiv.append(projectTitle, projectActionDiv)
+        projectDiv.append(projectElementsDiv);
         
         project.tasks.forEach(task => {
           const taskDiv = document.createElement('div');
-          const taskTitle = document.createElement('p');
+          taskDiv.classList.add('task-container');
+          
+          const taskTitle = document.createElement('h3');
           taskTitle.textContent = task.title;
-
+          
           const taskDueDate = document.createElement('p');
-          taskDueDate.textContent = task.dueDate;
-
+          try {
+            const currentDate = new Date();
+            const cleanedDueDate = task.dueDate.replace(/(\d+)(st|nd|rd|th)/, "$1");
+            const parsedDate = parse(cleanedDueDate, "MMMM d yyyy", new Date());
+        
+            if (isNaN(parsedDate)) {
+                taskDueDate.textContent = "Invalid Due Date";
+            } else {
+                const daysRemaining = differenceInCalendarDays(parsedDate, currentDate);
+                if (daysRemaining > 0){
+                taskDueDate.textContent = `${daysRemaining} day(s) remaining!`;
+                }
+                else if(daysRemaining < 0){
+                taskDueDate.textContent = `Overdue!`;
+                }
+                else taskDueDate.textContent = `Ends today.`;
+                 
+            }
+          } 
+          catch (error) {
+            console.error("Failed to parse or format due date:", error);
+            taskDueDate.textContent = "Invalid Due Date";
+          }
+          
           const taskExpandButton = document.createElement('button');
           const taskExpandButtonSvg = document.createElement('img');
           taskExpandButtonSvg.src = expandDown;
           
+          const priorityDot = document.createElement('div');
+          priorityDot.classList.add('priority-dot');
+          if(task.priority === "low"){
+            priorityDot.style.backgroundColor = "yellow";
+          }
+          else if(task.priority === "medium"){
+            priorityDot.style.backgroundColor = "orange";
+          }
+          else{
+            priorityDot.style.backgroundColor = "red";
+          }
+
           const taskDetails = document.createElement('div');
           taskDetails.style.display = 'none';
-
           taskDetails.textContent = 
             `Title: ${task.title}, ` +
             `Description: ${task.description}, ` +
@@ -170,10 +216,16 @@ export class ProjectManager {
             project.removeTask(task);
             this.listProjectsContent(content);
           });
+          const taskActionsDiv = document.createElement('div');
+          taskActionsDiv.classList.add('task-actions');
+          const taskElementsDiv = document.createElement('div');
+          taskElementsDiv.classList.add('task-elements-div');
           taskExpandButton.append(taskExpandButtonSvg);
           deleteTaskButton.append(deleteTaskButtonSvg);
           taskDetails.append(editTask);
-          taskDiv.append(taskTitle, taskDueDate, deleteTaskButton, taskExpandButton, taskDetails);  
+          taskActionsDiv.append(taskExpandButton, deleteTaskButton, priorityDot);
+          taskElementsDiv.append(taskTitle, taskDueDate, taskActionsDiv,)
+          taskDiv.append(taskElementsDiv, taskDetails);  
           projectDiv.append(taskDiv);
         });
         content.append(projectDiv);
