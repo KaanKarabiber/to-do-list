@@ -1,4 +1,4 @@
-import { defaultTask } from "./toDo";
+import { defaultTask, defaultTask2, defaultTask3, defaultTask4 } from "./toDo";
 import { openTaskModal } from "./modal";
 import { Task } from "./toDo";
 import { parse, format, differenceInCalendarDays, parseISO } from "date-fns";
@@ -21,7 +21,7 @@ export class Project{
       this.tasks = this.tasks.filter(t => t !== task);
     }
 }
-export const defaultProject = new Project("default project", [defaultTask]);
+export const defaultProject = new Project("Default project", [defaultTask, defaultTask2, defaultTask3, defaultTask4]);
 
 export class ProjectManager {
     constructor() {
@@ -260,6 +260,7 @@ export class ProjectManager {
           deleteTaskButtonSvg.src = deleteIcon;
           deleteTaskButton.addEventListener('click', () => {
             project.removeTask(task);
+            this.saveProjectsToStorage();
             this.listProjectsContent(content);
           });
           const taskActionsDiv = document.createElement('div');

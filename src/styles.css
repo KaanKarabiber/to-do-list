@@ -8,10 +8,11 @@ html, body {
   padding: 0;         
   box-sizing: border-box;
 }
-
+ul{
+  color: var(--text-color);
+}
 body {
   background-color: #020617;
-  color: var(--text-color); 
   margin: 50px;       
   display: grid;      
   grid-template-rows: 1fr 10fr;
@@ -30,7 +31,9 @@ img {
   justify-content: center;
   align-items: center;
 }
-
+textarea{
+  resize: none;
+}
 .modal {
   display: none;
   position: fixed;
@@ -41,6 +44,7 @@ img {
   background: white;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 250px;
 }
 .modal-overlay {
   display: none;
@@ -52,11 +56,54 @@ img {
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
+
 .modal.active,
 .modal-overlay.active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
+#task-form input, textarea{
+  border: 1px solid #020617;
+  margin-bottom: 5px;
+}
+.radio-button-div{
+  display: flex;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+#priority-low{
+  accent-color: yellow;
+}
+#priority-medium{
+  accent-color: orange; 
+}
+#priority-high{
+  accent-color: red; 
+} 
+#submit-task-modal{
+  color: var(--text-color);
+  background-color: #4caf50;
+  width: 100px;
+  padding: 3px;
+  margin: 5px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+#close-modal{
+  color: var(--text-color);
+  background-color: red;
+  width: 50px;
+  border: none;
+  padding: 3px;
+  margin: 5px;
+  font-weight: bold;
+}
 /* create project */
 
 #project-form {
@@ -74,7 +121,7 @@ img {
   height: 100%;
   box-sizing: border-box;
   border: 1px solid black;
-  font-size: 18px;
+  font-size: 22px;
   border-radius: 10px;
   padding: 10px;
 }
@@ -100,6 +147,9 @@ img {
   border: 1px solid black;
   border-radius: 10px;
   text-align: center;
+}
+#page-title{
+  color: var(--text-color);
 }
 
 /* sidebar */
@@ -173,10 +223,16 @@ li{
   margin-top: 10px;
 }
 .task-elements-div{
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: flex-end; 
   align-items: center;
+  gap: 10px;
 }
+.task-elements-div > :first-child {
+  justify-self: flex-start; 
+}
+
 .task-container p {
   margin-right: 15px;
 }
