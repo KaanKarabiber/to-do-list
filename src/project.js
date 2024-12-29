@@ -7,6 +7,7 @@ import expandDown from './assets/arrow-expand-down.svg';
 import expandUp from './assets/arrow-expand-up.svg';
 import addProjectIcon from './assets/add.svg';
 import dueDateIcon from './assets/dueDate.svg';
+import editTaskIcon from './assets/edit-task-icon.svg';
 
 export class Project{
     constructor (title, tasks = []){
@@ -193,7 +194,8 @@ export class ProjectManager {
         
           taskDetails.classList.add('task-details');
           const editTask = document.createElement('button');
-          editTask.textContent = "edit task";
+          const editTaskImg = document.createElement('img');
+          editTaskImg.src = editTaskIcon;
           editTask.addEventListener("click", () => {
             openTaskModal(project, task); 
           });
@@ -223,6 +225,7 @@ export class ProjectManager {
           taskExpandButton.append(taskExpandButtonSvg);
           deleteTaskButton.append(deleteTaskButtonSvg);
           taskDetails.append(editTask);
+          editTask.append(editTaskImg);
           taskActionsDiv.append(taskExpandButton, deleteTaskButton, priorityDot);
           taskElementsDiv.append(taskTitle, taskDueDate, taskActionsDiv,)
           taskDiv.append(taskElementsDiv, taskDetails);  
