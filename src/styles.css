@@ -73,7 +73,8 @@ img {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  border: 1px solid white;
+  border: 1px solid black;
+  font-size: 18px;
   border-radius: 10px;
   padding: 10px;
 }
@@ -235,12 +236,33 @@ li{
 
 .task-details button {
   background: none;
+  background-color: blue;
   padding: 8px 16px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  align-self: flex-end;
 }
-
+.first-line-details{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid wheat;
+}
+.due-date-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.task-details-second-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid wheat;
+  overflow-wrap: break-word;
+  margin-bottom: 5px;
+}
 .priority-dot {
   width: 10px;
   height: 10px;

@@ -209,14 +209,31 @@ export class ProjectManager {
           }
 
           const taskDetails = document.createElement('div');
+
+          const titleDueDateDiv = document.createElement('div');
+          titleDueDateDiv.classList.add('first-line-details');
+          const taskDetailsTitle = document.createElement('p');
+          const taskDetailsPriority = document.createElement('p');
+          taskDetailsPriority.textContent = `Priority: ${task.priority}`
+          taskDetailsTitle.textContent = `Title: ${task.title}`;
+          const dueDateDiv = document.createElement('div');
+          dueDateDiv.classList.add('due-date-div');
+          const taskDetailsDueDate = document.createElement('p');
+          taskDetailsDueDate.textContent = task.dueDate;
+          const taskDetailsDueImg = document.createElement('img');
+          taskDetailsDueImg.src = dueDateIcon;
           taskDetails.style.display = 'none';
-          taskDetails.textContent = 
-            `Title: ${task.title}, ` +
-            `Description: ${task.description}, ` +
-            `Due Date: ${task.dueDate}, ` +
-            `Priority: ${task.priority}, ` +
-            `Notes: ${task.notes}, ` +
-            `Completed: ${task.check ? "Yes" : "No"}`;
+          
+          const taskDetailsDescriptionDiv = document.createElement('div');
+          const taskDetailsDescription = document.createElement('p');
+          taskDetailsDescription.textContent = `Description: ${task.description}`;
+
+          const taskDetailsNotesDiv = document.createElement('div');
+          const taskDetailsNotes = document.createElement('p');
+          taskDetailsNotes.textContent = `Notes: ${task.notes}`;
+          
+          const taskDetailsSecondRow = document.createElement('div');
+          taskDetailsSecondRow.classList.add('task-details-second-row');
         
           taskDetails.classList.add('task-details');
           const editTask = document.createElement('button');
@@ -228,7 +245,8 @@ export class ProjectManager {
     
           taskExpandButton.addEventListener('click', () => {
             if (taskDetails.style.display === 'none') {
-              taskDetails.style.display = 'block';
+              taskDetails.style.display = 'flex';
+              taskDetails.style.flexDirection = 'column';
               taskExpandButtonSvg.src = expandUp; 
             } 
             else {
@@ -248,10 +266,16 @@ export class ProjectManager {
           taskActionsDiv.classList.add('task-actions');
           const taskElementsDiv = document.createElement('div');
           taskElementsDiv.classList.add('task-elements-div');
+         
           checkButton.append(checkmark);
           taskExpandButton.append(taskExpandButtonSvg);
           deleteTaskButton.append(deleteTaskButtonSvg);
-          taskDetails.append(editTask);
+          dueDateDiv.append(taskDetailsDueImg, taskDetailsDueDate);
+          titleDueDateDiv.append(taskDetailsTitle, taskDetailsPriority, dueDateDiv);
+          taskDetailsDescriptionDiv.append(taskDetailsDescription);
+          taskDetailsNotesDiv.append(taskDetailsNotes);
+          taskDetailsSecondRow.append(taskDetailsDescriptionDiv, taskDetailsNotesDiv);
+          taskDetails.append(titleDueDateDiv, taskDetailsSecondRow, editTask);
           editTask.append(editTaskImg);
           taskActionsDiv.append(checkButton, taskExpandButton, deleteTaskButton, priorityDot);
           taskElementsDiv.append(taskTitle, taskDueDate, taskActionsDiv,)
