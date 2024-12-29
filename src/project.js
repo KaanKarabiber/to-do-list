@@ -47,27 +47,36 @@ export class ProjectManager {
     }
     saveProjectsToStorage() {
       const projectsJSON = this.projects.map(project => ({
-          title: project.title,
-          tasks: project.tasks.map(task => ({
-              title: task.title,
-              description: task.description,
-              dueDate: task.dueDate,
-              priority: task.priority,
-              notes: task.notes,
-              check: task.check
-          }))
+        title: project.title,
+        tasks: project.tasks.map(task => ({
+          title: task.title,
+          description: task.description,
+          dueDate: task.dueDate,
+          priority: task.priority,
+          notes: task.notes,
+          check: task.check 
+        }))
       }));
       localStorage.setItem("projects", JSON.stringify(projectsJSON));
     }
     loadProjectsFromStorage() {
       const projectsJSON = localStorage.getItem("projects");
       if (!projectsJSON) return null;
-
+    
       return JSON.parse(projectsJSON).map(projectData => {
-          const project = new Project(projectData.title);
-          project.tasks = projectData.tasks.map(task => new Task(task.title, task.description, task.dueDate, task.priority, task.notes, task.check)
+        const project = new Project(projectData.title);
+        project.tasks = projectData.tasks.map(taskData => {
+          const task = new Task(
+            taskData.title,
+            taskData.description,
+            taskData.dueDate,
+            taskData.priority,
+            taskData.notes,
+            taskData.check
           );
-          return project;
+          return task;
+        });
+        return project;
       });
     }
     listProjectsSidebar(sidebar){
@@ -140,6 +149,11 @@ export class ProjectManager {
           
           const taskTitle = document.createElement('h3');
           taskTitle.textContent = task.title;
+          if (task.check) {
+            taskTitle.style.textDecoration = 'line-through';
+          } else {
+            taskTitle.style.textDecoration = 'none';
+          }
           
           const taskDueDate = document.createElement('p');
           try {
@@ -165,7 +179,19 @@ export class ProjectManager {
             console.error("Failed to parse or format due date:", error);
             taskDueDate.textContent = "Invalid Due Date";
           }
-          
+          const checkButton = document.createElement('button');
+          const checkmark = document.createElement('span');
+          checkButton.classList.add('task-check-button');
+          checkmark.classList.add('checkmark');
+          checkButton.ariaChecked = task.check;
+          checkButton.addEventListener('click', () => {
+            const isChecked = checkButton.getAttribute("aria-checked") === "true";
+            checkButton.setAttribute("aria-checked", !isChecked);
+            task.check = !task.check;
+            taskTitle.style.textDecoration = task.check ? 'line-through' : 'none';
+            this.saveProjectsToStorage();
+          });
+
           const taskExpandButton = document.createElement('button');
           const taskExpandButtonSvg = document.createElement('img');
           taskExpandButtonSvg.src = expandDown;
@@ -222,11 +248,12 @@ export class ProjectManager {
           taskActionsDiv.classList.add('task-actions');
           const taskElementsDiv = document.createElement('div');
           taskElementsDiv.classList.add('task-elements-div');
+          checkButton.append(checkmark);
           taskExpandButton.append(taskExpandButtonSvg);
           deleteTaskButton.append(deleteTaskButtonSvg);
           taskDetails.append(editTask);
           editTask.append(editTaskImg);
-          taskActionsDiv.append(taskExpandButton, deleteTaskButton, priorityDot);
+          taskActionsDiv.append(checkButton, taskExpandButton, deleteTaskButton, priorityDot);
           taskElementsDiv.append(taskTitle, taskDueDate, taskActionsDiv,)
           taskDiv.append(taskElementsDiv, taskDetails);  
           projectDiv.append(taskDiv);

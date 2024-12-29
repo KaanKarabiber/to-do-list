@@ -181,17 +181,40 @@ li{
 }
 
 /* Task actions (buttons) */
+
 .task-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.priority-dot {
-  width: 10px;
-  height: 10px;
+.task-check-button {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #bbb !important;
   border-radius: 50%;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);  
+  background-color: white !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease !important;
 }
+
+.task-check-button[aria-checked="true"] {
+  background-color: #4caf50 !important;
+  border-color: #4caf50 !important;
+}
+
+.task-check-button[aria-checked="true"]::after {
+  content: '' !important;
+  position: absolute !important;
+  width: 10px !important;
+  height: 5px !important;
+  border-left: 3px solid white !important;
+  border-bottom: 3px solid white !important;
+  top: 9px !important;
+  left: 7px !important;
+   transform: rotate(300deg); 
+}
+
 .task-actions button {
   background: none;
   border: none;
@@ -218,3 +241,9 @@ li{
   cursor: pointer;
 }
 
+.priority-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);  
+}
